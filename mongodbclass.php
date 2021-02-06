@@ -139,9 +139,27 @@ class MongoDbClass
         $command = new MongoDB\Driver\Command($commandArray);
 
         /** @var MongoDB\Driver\Cursor $cursor */
-        $cursor = $this->manager->executeCommand($this->databaseName, $command);
 
-        $responseArray = current($cursor->toArray())->values;
+        $responseArray = [
+            'answer' => false,
+            'message' => 'Nothing to report',
+            'code_name' => ''
+        ];
+
+        try {
+            $cursor = $this->manager->executeCommand($this->databaseName, $command);
+            $cursorArray = $cursor->toArray();
+            if (isset($cursorArray[0]) === true) {
+                $responseArray = json_decode(json_encode($cursorArray[0]), true);
+            }
+
+        } catch (MongoDb\Driver\Exception\CommandException $e) {
+            $responseArray = [
+                'answer' => false,
+                'message' => $e->getMessage(),
+                'code_name' => $e->getResultDocument()->codeName
+            ];
+        }
 
         return $responseArray;
     }
@@ -246,7 +264,11 @@ class MongoDbClass
         /** @var MongoDB\Driver\WriteResult $writeResult */
         $writeResult = $this->manager->executeBulkWrite($this->getDatabaseCollectionName(), $bulk);
 
-        $resultArray = $writeResult->_toArray();
+        $resultArray = [
+            'inserted_count' => $writeResult->getInsertedCount(),
+            'updated_count' => $writeResult->getModifiedCount(),
+            'deleted_count' => $writeResult->getDeletedCount()
+        ];
 
         return $resultArray;
     }
@@ -353,8 +375,12 @@ class MongoDbClass
      * @return array
      */
     public function databaseList(bool $nameOnly = true): array {
+        $currentDatabase = $this->databaseName;
+        $this->databaseName = 'admin';
         $commandArray = ['listDatabases' => 1, 'nameOnly' => $nameOnly];
-        return $this->execute($commandArray);
+        $response = $this->execute($commandArray);
+        $this->databaseName = $currentDatabase;
+        return $response;
     }
 
     /**
