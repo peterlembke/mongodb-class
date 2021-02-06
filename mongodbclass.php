@@ -1,13 +1,6 @@
 <?php
 /**
- * MongoDb class that use the new MongoDb driver
- *
- * @package mongo
- * @subpackage class
- */
-
-/**
- * MongoDb class that use the new MongoDb driver
+ * MongoDb class that use the new MongoDb driver to perform common tasks with minimum of options.
  *
  * @author      Peter Lembke <info@charzam.com>
  * @version     2021-02-06
@@ -16,7 +9,7 @@
  * @license     https://opensource.org/licenses/gpl-license.php GPL-3.0-or-later
  * @see         https://github.com/peterlembke/mongodb-class
  */
-class mongodb
+class MongoDbClass
 {
     /** @var string $host */
     protected $host = '';
@@ -346,28 +339,12 @@ class mongodb
     }
 
     /**
-     * Delete a database
+     * Delete an index
      * @return array
      */
-    public function databaseDelete(): array {
-        $commandArray = ['dropDatabase' => 1];
+    public function indexList(): array {
+        $commandArray = ['listIndexes' => $this->collectionName];
         return $this->execute($commandArray);
-    }
-
-    /**
-     * Delete a collection
-     * @return array
-     */
-    public function collectionDelete(): array {
-        $commandArray = ['drop' => $this->collectionName];
-        return $this->execute($commandArray);
-    }
-
-    /**
-     * Create a database
-     */
-    public function databaseCreate(): void {
-        
     }
 
     /**
@@ -391,6 +368,32 @@ class mongodb
     }
 
     /**
+     * Delete a database
+     * @return array
+     */
+    public function databaseDelete(): array {
+        $commandArray = ['dropDatabase' => 1];
+        return $this->execute($commandArray);
+    }
+
+    /**
+     * Delete a collection
+     * @return array
+     */
+    public function collectionDelete(): array {
+        $commandArray = ['drop' => $this->collectionName];
+        return $this->execute($commandArray);
+    }
+
+    /**
+     * Create a database
+     * It seems to be enough to create a collection and then the database are also created
+     */
+    public function databaseCreate(): void {
+
+    }
+
+    /**
      * Create a collection
      * @see https://www.php.net/manual/en/class.mongodb-driver-command.php
      * @return array
@@ -410,6 +413,4 @@ class mongodb
         $commandArray = ["buildinfo" => 1];
         return $this->execute($commandArray);
     }
-
-
 }
