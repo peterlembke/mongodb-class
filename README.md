@@ -7,7 +7,7 @@ This repository is also a collection of resources to learn and use MongoDb.
 * License: GNU [GPL-3.0-or-later](LICENSE.md)
 * Releases: [CHANGELOG](CHANGELOG.md)
 * Status: Not reached v 1.0 yet
-* [Documentation](documentation/README.md)
+* [Documentation](documentation/learn.md)
 
 # License
 This documentation is copyright (C) 2021 Peter Lembke.  
