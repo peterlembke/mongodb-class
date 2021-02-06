@@ -1,6 +1,6 @@
 # The MongoDb Library
 
-The [PHP MongoDb Driver](https://www.php.net/manual/en/set.mongodb.php) is just a low level gateway to the MongoDb server. You can do everything trough the driver but it is easier with a library on top of the driver.
+The [PHP MongoDb Driver](https://www.php.net/manual/en/set.mongodb.php) is just a low level gateway to the MongoDb server. You can do everything trough the driver, but it is easier with a library on top of the driver.
 
 The [MongoDB PHP Library](https://docs.mongodb.com/php-library/v1.2/) does just that. Providing great help for you.
 

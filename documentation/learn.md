@@ -41,6 +41,7 @@ If you want to use the [MongoDb driver](php-driver.md) directly in PHP without t
 Software associated with MongoDb
 
 * [MongoDb](https://github.com/mongodb)
+* [MongoDb PHP library](https://github.com/mongodb/mongo-php-library)  
 * [MongoDB Tools](https://github.com/mongodb/mongo-tools)
 * [Mongo Express](https://github.com/mongo-express/mongo-express)
 

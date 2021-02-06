@@ -335,32 +335,59 @@ class mongodb
     /**
      * Delete an index
      * @param string $indexName
+     * @return array
      */
-    public function indexDelete(string $indexName = ''): void {
-
+    public function indexDelete(string $indexName = ''): array {
+        $commandArray = [
+            'dropIndexes' => $this->collectionName,
+            'index' => $indexName
+        ];
+        return $this->execute($commandArray);
     }
 
     /**
      * Delete a database
-     * @param string $indexName
+     * @return array
      */
-    public function databaseDelete(): void {
-
+    public function databaseDelete(): array {
+        $commandArray = ['dropDatabase' => 1];
+        return $this->execute($commandArray);
     }
 
     /**
      * Delete a collection
+     * @return array
      */
-    public function collectionDelete(): void {
-
+    public function collectionDelete(): array {
+        $commandArray = ['drop' => $this->collectionName];
+        return $this->execute($commandArray);
     }
 
     /**
      * Create a database
-     * @param string $indexName
      */
     public function databaseCreate(): void {
+        
+    }
 
+    /**
+     * Get a list with all database names on the server
+     * @param bool $nameOnly
+     * @return array
+     */
+    public function databaseList(bool $nameOnly = true): array {
+        $commandArray = ['listDatabases' => 1, 'nameOnly' => $nameOnly];
+        return $this->execute($commandArray);
+    }
+
+    /**
+     * Get a list with all collection names in the database
+     * @param bool $nameOnly
+     * @return array
+     */
+    public function collectionList(bool $nameOnly = true): array {
+        $commandArray = ['listCollections' => 1, 'nameOnly' => $nameOnly];
+        return $this->execute($commandArray);
     }
 
     /**
