@@ -1,13 +1,18 @@
-# MongoDb-class
+# PHP Info
 
-This [PHP class](https://www.php.net/manual/en/language.oop5.php) uses the [new MongoDb driver](https://www.php.net/manual/en/set.mongodb.php) to manage [MongoDb servers](https://www.mongodb.com/).
-This repository is also a collection of resources to learn and use MongoDb.
+On the phpinfo page you see what PHP extensions are loaded and what versions are used and all settings used.
 
-# Quick information
-* License: GNU [GPL-3.0-or-later](LICENSE.md)
-* Releases: [CHANGELOG](CHANGELOG.md)
-* Status: Not reached v 1.0 yet
-* [Documentation](documentation/README.md)
+You can check with phpinfo if an ini file have been used and if an extension is activated.
+
+Create a phpinfo.php file in a public folder on your web server. With this content
+```
+<?php
+phpinfo(); 
+```
+
+Surf to phpinfo.php and you should see the page.
+
+You can now search for mongo and see if there is a section for that and if the ini file exist in the list at the top of the page.
 
 # License
 This documentation is copyright (C) 2021 Peter Lembke.  
