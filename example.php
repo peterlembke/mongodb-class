@@ -3,7 +3,7 @@
  * Example file that use the MongoDb class
  *
  * @author      Peter Lembke <info@charzam.com>
- * @version     2021-02-06
+ * @version     2021-02-07
  * @since       2021-02-06
  * @copyright   Copyright (c) 2021, Peter Lembke
  * @license     https://opensource.org/licenses/gpl-license.php GPL-3.0-or-later

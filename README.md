@@ -1,12 +1,14 @@
 # MongoDb-class
 
-This [PHP class](https://www.php.net/manual/en/language.oop5.php) uses the [new MongoDb driver](https://www.php.net/manual/en/set.mongodb.php) to manage [MongoDb servers](https://www.mongodb.com/).
-This repository is also a collection of resources to learn and use MongoDb.
+This [PHP class](mongodbclass.php) uses the [new MongoDb driver](https://www.php.net/manual/en/set.mongodb.php) to manage [MongoDb servers](https://www.mongodb.com/).
+This repository is also a collection of resources to [learn and use MongoDb](documentation/learn.md).  
+A [PHP example](example.php) file show how to use the class.  
+This class only have the commonly used features with as few options as possible to keep things simple.  
 
 # Quick information
 * License: GNU [GPL-3.0-or-later](LICENSE.md)
 * Releases: [CHANGELOG](CHANGELOG.md)
-* Status: Not reached v 1.0 yet
+* Status: Working
 * [Documentation](documentation/learn.md)
 
 # License

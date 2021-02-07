@@ -3,7 +3,7 @@
  * MongoDb class that use the new MongoDb driver to perform common tasks with minimum of options.
  *
  * @author      Peter Lembke <info@charzam.com>
- * @version     2021-02-06
+ * @version     2021-02-07
  * @since       2021-02-06
  * @copyright   Copyright (c) 2021, Peter Lembke
  * @license     https://opensource.org/licenses/gpl-license.php GPL-3.0-or-later
@@ -482,7 +482,6 @@ class MongoDbClass
      * to get the data you want from the collection
      * @see https://www.php.net/manual/en/class.mongodb-driver-command.php#123163
      * @see https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
-     * @see https://stackoverflow.com/questions/1869091/how-to-convert-an-array-to-object-in-php
      * @see https://docs.mongodb.com/manual/reference/command/aggregate/
      * @param array $pipeline
      * @return array
