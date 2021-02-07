@@ -123,7 +123,7 @@ class MongoDbClass
      * Get a string with databaseName.collectionName
      * @return string
      */
-    protected function getDatabaseCollectionName(): string {
+    public function getDatabaseCollectionName(): string {
         return $this->databaseName . '.' . $this->collectionName;
     }
 
@@ -133,26 +133,25 @@ class MongoDbClass
      * @see https://www.php.net/manual/en/mongodb-driver-manager.executecommand.php
      * @see https://www.php.net/manual/en/class.mongodb-driver-cursor.php
      * @param array $commandArray
+     * @param array $options
      * @return array
      */
     protected function execute(array $commandArray = []): array {
         $command = new MongoDB\Driver\Command($commandArray);
 
-        /** @var MongoDB\Driver\Cursor $cursor */
-
         $responseArray = [
             'answer' => false,
-            'message' => 'Nothing to report',
+            'message' => 'Got nothing back from the command',
             'code_name' => ''
         ];
 
         try {
+            /** @var MongoDB\Driver\Cursor $cursor */
             $cursor = $this->manager->executeCommand($this->databaseName, $command);
             $cursorArray = $cursor->toArray();
-            if (isset($cursorArray[0]) === true) {
-                $responseArray = json_decode(json_encode($cursorArray[0]), true);
+            if (count($cursorArray) > 0) {
+                $responseArray = json_decode(json_encode($cursorArray), true);
             }
-
         } catch (MongoDb\Driver\Exception\CommandException $e) {
             $responseArray = [
                 'answer' => false,
@@ -281,7 +280,7 @@ class MongoDbClass
     public function loadById(string $itemId = ''): array {
         $objectId = $this->getObjectId($itemId);
         $filter = ['_id' => $objectId];
-        $options = ['projection' => ['_id' => 0]];
+        $options = []; // ['projection' => ['_id' => 0]];
 
         return $this->query($filter, $options);
     }
@@ -299,11 +298,23 @@ class MongoDbClass
 
     /**
      * Get statistics for the collection you have set
+     * @param bool $compact
      * @return array
      */
-    public function collectionStatistics(): array {
+    public function collectionStatistics(bool $compact = true): array {
         $commandArray = ["collstats" => $this->collectionName];
-        return $this->execute($commandArray);
+        $response = $this->execute($commandArray);
+        if ($compact === false) {
+            return $response;
+        }
+        $result = [];
+        foreach ($response as $item) {
+            unset($item['wiredTiger']);
+            unset($item['indexDetails']);
+            $name = $item['ns'];
+            $result[$name] = $item;
+        }
+        return $result;
     }
 
     /**
@@ -362,11 +373,20 @@ class MongoDbClass
 
     /**
      * Delete an index
+     * @param bool $nameOnly
      * @return array
      */
-    public function indexList(): array {
+    public function indexList(bool $nameOnly = true): array {
         $commandArray = ['listIndexes' => $this->collectionName];
-        return $this->execute($commandArray);
+        $response = $this->execute($commandArray);
+        if ($nameOnly === false) {
+            return $response;
+        }
+        $result = [];
+        foreach ($response as $item) {
+            $result[] = $item['name'];
+        }
+        return $result;
     }
 
     /**
@@ -380,7 +400,14 @@ class MongoDbClass
         $commandArray = ['listDatabases' => 1, 'nameOnly' => $nameOnly];
         $response = $this->execute($commandArray);
         $this->databaseName = $currentDatabase;
-        return $response;
+        if ($nameOnly === false) {
+            return $response;
+        }
+        $result = [];
+        foreach ($response[0]['databases'] as $item) {
+            $result[] = $item['name'];
+        }
+        return $result;
     }
 
     /**
@@ -390,7 +417,15 @@ class MongoDbClass
      */
     public function collectionList(bool $nameOnly = true): array {
         $commandArray = ['listCollections' => 1, 'nameOnly' => $nameOnly];
-        return $this->execute($commandArray);
+        $response = $this->execute($commandArray);
+        if ($nameOnly === false) {
+            return $response;
+        }
+        $result = [];
+        foreach ($response as $item) {
+            $result[] = $item['name'];
+        }
+        return $result;
     }
 
     /**
@@ -431,12 +466,34 @@ class MongoDbClass
     }
 
     /**
-     * Get information about the server
+     * Get information about the MongoDb software
      * @see https://www.php.net/manual/en/mongodb-driver-command.construct.php
+     * @param bool $compact
      * @return array
      */
-    public function getBuildInformation(): array {
+    public function getBuildInformation(bool $compact = true): array {
         $commandArray = ["buildinfo" => 1];
+        $response = $this->execute($commandArray);
+        return $response[0];
+    }
+
+    /**
+     * You can send in a pipeline with stages and MQL commands
+     * to get the data you want from the collection
+     * @see https://www.php.net/manual/en/class.mongodb-driver-command.php#123163
+     * @see https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
+     * @see https://stackoverflow.com/questions/1869091/how-to-convert-an-array-to-object-in-php
+     * @see https://docs.mongodb.com/manual/reference/command/aggregate/
+     * @param array $pipeline
+     * @return array
+     */
+    public function collectionAggregate(array $pipeline = []): array {
+        $commandArray = [
+            'aggregate' => $this->collectionName,
+            'pipeline' => $pipeline,
+            // 'explain' => true, // If aggregation do not work then uncomment to get more information
+            'cursor' => new stdClass()
+        ];
         return $this->execute($commandArray);
     }
 }
